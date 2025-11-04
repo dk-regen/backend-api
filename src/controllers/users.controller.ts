@@ -93,9 +93,17 @@ export async function getToken(req: Request, res: Response) {
             errors: errors.array() });
     }
 
-    const users = await getRepository(User).findOne({id: req.body.userId, emailAddress: req.body.emailAddress});
+    const userId = req.query.userId ? parseInt(req.query.userId as string) : null;
+    const emailAddress = req.query.emailAddress as string;
+    
+    if (!userId || !emailAddress) {
+        return res.status(400).json({ 
+            message: "userId and emailAddress are required as query parameters"});
+    }
+
+    const users = await getRepository(User).findOne({id: userId, emailAddress: emailAddress});
     if (users) {
-        const token = await getRepository(RefreshToken).findOne({userId: req.body.userId});
+        const token = await getRepository(RefreshToken).findOne({userId: userId});
 
         if (token){
             delete token.id;

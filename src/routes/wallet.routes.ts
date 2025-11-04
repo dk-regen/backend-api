@@ -5,7 +5,7 @@ const router = Router();
 import {getBalance, topUpBalance, makePayment} from '../controllers/wallet.controller';
 
 router.route('/balance')
-.post(getBalance);
+.get(getBalance);
 
 router.route('/topup')
 .post(topUpBalance);

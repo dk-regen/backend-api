@@ -35,9 +35,9 @@ router.route('/login')
         , login);
 
 router.route('/token')
-        .post(
-            body('userId').not().isEmpty().withMessage("can't empty"),
-            body('emailAddress').not().isEmpty().withMessage("can't empty")
+        .get(
+            check('userId').not().isEmpty().withMessage("can't empty"),
+            check('emailAddress').not().isEmpty().withMessage("can't empty")
         , getToken);
 
 export default router;

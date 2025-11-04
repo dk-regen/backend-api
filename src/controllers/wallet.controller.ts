@@ -10,9 +10,12 @@ export async function getBalance(req: Request, res: Response) {
     var token = req.headers['x-access-token'];
     if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
 
-    const checkTokenValidity = await getRepository(RefreshToken).findOne({userId:req.body.userId, token: token as string});
+    const userId = req.query.userId ? parseInt(req.query.userId as string) : null;
+    if (!userId) return res.status(400).send({ message: 'userId is required as query parameter.' });
+
+    const checkTokenValidity = await getRepository(RefreshToken).findOne({userId: userId, token: token as string});
     if (checkTokenValidity){
-        const userWallet = await getRepository(UserWallet).findOne({userId: req.body.userId})
+        const userWallet = await getRepository(UserWallet).findOne({userId: userId})
         if (userWallet) {
             delete userWallet.id;
             return res.status(200).json(userWallet);
